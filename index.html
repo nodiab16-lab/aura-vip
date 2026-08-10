@@ -3,605 +3,932 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AURA | Private VIP Suite & Bespoke Concierge</title>
+  <title>AURA | Bespoke Luxury VIP Suite Collection</title>
   <style>
     :root {
       --gold: #D4AF37;
       --gold-hover: #AA8B22;
-      --dark-bg: #0A0A0C;
-      --card-bg: #141418;
-      --card-border: #24242C;
+      --gold-glow: rgba(212, 175, 55, 0.15);
+      --dark-bg: #070709;
+      --card-bg: #111116;
+      --card-border: #22222B;
       --text-light: #F0F0F4;
       --text-muted: #8E8E9A;
-      --accent-green: #48BB78;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       background-color: var(--dark-bg);
       color: var(--text-light);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-      padding: 40px 20px;
-      display: flex;
-      justify-content: center;
+      overflow-x: hidden;
     }
 
-    .container {
+    /* Ambient Floating Glow Background FX */
+    .ambient-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 0;
+      pointer-events: none;
+      animation: floatGlow 12s infinite alternate ease-in-out;
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translate(-50%, 0) scale(1); }
+      50% { transform: translate(-45%, 100px) scale(1.2); }
+      100% { transform: translate(-55%, 200px) scale(0.9); }
+    }
+
+    /* Floating Keyframe Animations */
+    @keyframes floatSlow {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 20px var(--gold-glow); }
+      50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.3); }
+      100% { box-shadow: 0 0 20px var(--gold-glow); }
+    }
+
+    /* Top Navigation Header */
+    .top-nav {
+      width: 100%;
+      background: rgba(7, 7, 9, 0.75);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+    }
+
+    .brand-logo h1 {
+      color: var(--gold);
+      font-weight: 300;
+      letter-spacing: 8px;
+      font-size: 24px;
+    }
+
+    .nav-auth-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .nav-btn-gold {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+      font-weight: 600;
+    }
+
+    .nav-btn-gold:hover {
+      background: var(--gold-hover);
+      border-color: var(--gold-hover);
+      color: #000;
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 140px 24px 80px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      color: var(--gold);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      animation: floatSlow 6s ease-in-out infinite;
+    }
+
+    .hero-title {
+      font-size: 64px;
+      font-weight: 200;
+      letter-spacing: 12px;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #A0A0B0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      max-width: 640px;
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 48px;
+      letter-spacing: 0.5px;
+    }
+
+    /* UNIQUE ACTION BUTTON */
+    .cta-trigger-btn {
+      background: linear-gradient(135deg, #181820 0%, #0A0A0D 100%);
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 22px 48px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      animation: pulseGlow 4s infinite ease-in-out;
+    }
+
+    .cta-trigger-btn:hover {
+      background: var(--gold);
+      color: #000;
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(212, 175, 55, 0.35);
+    }
+
+    .cta-trigger-btn .star {
+      font-size: 10px;
+      transition: transform 0.4s ease;
+    }
+
+    .cta-trigger-btn:hover .star {
+      transform: rotate(180deg) scale(1.3);
+    }
+
+    /* CONCEPT & VIBE SECTION (FLOATING CARDS) */
+    .concept-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .section-header h2 {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .floating-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .float-card {
+      background: rgba(17, 17, 22, 0.6);
+      border: 1px solid var(--card-border);
+      padding: 48px 32px;
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .float-card:nth-child(1) { animation: floatSlow 7s ease-in-out infinite; }
+    .float-card:nth-child(2) { animation: floatSlow 8s ease-in-out 1s infinite; }
+    .float-card:nth-child(3) { animation: floatSlow 7.5s ease-in-out 0.5s infinite; }
+
+    .float-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-12px) !important;
+      background: rgba(20, 20, 28, 0.8);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-num {
+      color: var(--gold);
+      font-size: 14px;
+      letter-spacing: 3px;
+      margin-bottom: 24px;
+      display: block;
+      opacity: 0.8;
+    }
+
+    .float-card h3 {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+
+    .float-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* ATMOSPHERIC STATS BANNER */
+    .experience-banner {
+      max-width: 1200px;
+      margin: 0 auto 140px auto;
+      padding: 60px 40px;
+      background: linear-gradient(180deg, rgba(17, 17, 22, 0.4) 0%, rgba(10, 10, 12, 0.8) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-item .num {
+      font-size: 42px;
+      font-weight: 200;
+      color: var(--gold);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .stat-item .label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* MODAL OVERLAY FOR REQUEST ENGINE */
+    .aura-modal-wrapper {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(4, 4, 6, 0.94);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      display: none;
+      overflow-y: auto;
+      padding: 60px 20px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .aura-modal-wrapper.is-open {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      opacity: 1;
+    }
+
+    .aura-modal-content {
+      position: relative;
+      width: 100%;
       max-width: 1000px;
+      transform: translateY(30px);
+      transition: transform 0.4s ease;
+    }
+
+    .aura-modal-wrapper.is-open .aura-modal-content {
+      transform: translateY(0);
+    }
+
+    .aura-modal-close {
+      position: absolute;
+      top: -20px;
+      right: 0;
+      background: rgba(20, 20, 28, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .aura-modal-close:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* EMBEDDED ENGINE CONTAINER STYLES */
+    .container {
       width: 100%;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 40px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-    }
-
-    .brand-header {
-      text-align: center;
-      border-bottom: 1px solid var(--card-border);
-      padding-bottom: 24px;
-      margin-bottom: 32px;
-    }
-
-    .brand-header h1 {
-      color: var(--gold);
-      font-weight: 300;
-      letter-spacing: 6px;
-      margin-bottom: 8px;
-      font-size: 32px;
-    }
-
-    .brand-header p {
-      color: var(--text-muted);
-      font-size: 13px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
     }
 
     h2 { font-size: 22px; font-weight: 400; color: var(--gold); margin-bottom: 8px; }
     .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
 
-    /* Search & Filter Controls */
-    .filter-bar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .search-input { flex: 2; min-width: 200px; }
+    .select-input { flex: 1; min-width: 140px; }
 
-    .search-input {
-      flex: 2;
-      min-width: 200px;
-    }
-
-    .select-input {
-      flex: 1;
-      min-width: 140px;
-    }
-
-    /* Catalog Controls Bar */
     .catalog-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 12px 16px;
-      background: #0A0A0C;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; padding: 12px 16px; background: #070709;
+      border-radius: 8px; border: 1px solid var(--card-border);
     }
 
-    .currency-btn {
-      background: transparent;
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .currency-btn.active {
-      background: var(--gold);
-      color: #000;
-      border-color: var(--gold);
-      font-weight: bold;
-    }
-
-    /* Hotel Cards Grid */
-    .hotel-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
+    .hotel-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px; }
     .hotel-card {
-      background: #0A0A0C;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: grid;
-      grid-template-columns: 260px 1fr;
+      background: #070709; border: 1px solid var(--card-border);
+      border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s ease;
+      display: grid; grid-template-columns: 260px 1fr;
     }
+    .hotel-card:hover, .hotel-card.selected { border-color: var(--gold); box-shadow: 0 0 20px var(--gold-glow); }
+    .hotel-card.selected { background: rgba(212, 175, 55, 0.04); }
 
-    .hotel-card:hover, .hotel-card.selected {
-      border-color: var(--gold);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
-    }
-
-    .hotel-card.selected {
-      background: rgba(212, 175, 55, 0.04);
-    }
-
-    .hotel-img-container {
-      position: relative;
-      height: 100%;
-      min-height: 190px;
-    }
-
-    .hotel-img-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .hotel-img-container { position: relative; height: 100%; min-height: 190px; }
+    .hotel-img-container img { width: 100%; height: 100%; object-fit: cover; }
 
     .badge-tag {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(0,0,0,0.85);
-      color: var(--gold);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border: 1px solid var(--gold);
+      position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.85);
+      color: var(--gold); padding: 4px 8px; border-radius: 4px; font-size: 10px;
+      text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--gold);
     }
 
-    .hotel-details {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
+    .hotel-details { padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
     .hotel-details h3 { color: #FFF; font-size: 18px; font-weight: 500; margin-bottom: 4px; }
     .district-label { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
     .suite-name { font-size: 14px; color: #E0E0E8; font-weight: 600; margin-bottom: 6px; }
     .hotel-details p { color: var(--text-muted); font-size: 12.5px; line-height: 1.5; margin-bottom: 12px; }
 
-    .hotel-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid var(--card-border);
-      padding-top: 12px;
-    }
+    .hotel-footer { display: flex; justify-content: flex-end; align-items: center; border-top: 1px solid var(--card-border); padding-top: 12px; }
 
-    .price-display { color: var(--gold); font-size: 18px; font-weight: 600; }
-    .per-night { font-size: 11px; color: var(--text-muted); font-weight: normal; }
-
-    /* Stepper Navigation Bar */
-    .step-bar {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 36px;
-      position: relative;
-    }
-
-    .step-bar::before {
-      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--card-border); z-index: 1;
-    }
-
-    .step-node {
-      position: relative; z-index: 2; background: var(--card-bg); padding: 0 12px; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;
-    }
-
+    .step-bar { display: flex; justify-content: space-between; margin-bottom: 36px; position: relative; }
+    .step-bar::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--card-border); z-index: 1; }
+    .step-node { position: relative; z-index: 2; background: var(--card-bg); padding: 0 12px; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
     .step-node.active { color: var(--gold); font-weight: 600; }
     .step-node .num { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 11px; }
     .step-node.active .num { border-color: var(--gold); background: var(--gold); color: #000; }
 
-    /* Step Content Panels */
     .step-content { display: none; }
     .step-content.active { display: block; }
 
-    /* Form Controls */
     .form-group { margin-bottom: 20px; }
     label { display: block; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    input[type="text"], input[type="email"], input[type="date"], select, textarea {
-      width: 100%; padding: 14px; background: #0A0A0C; border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-light); font-size: 14px;
+    input[type="text"], input[type="email"], input[type="password"], input[type="date"], select, textarea {
+      width: 100%; padding: 14px; background: #070709; border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-light); font-size: 14px;
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); }
 
-    /* Checkbox Tiles */
     .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .checkbox-tile { background: #0A0A0C; border: 1px solid var(--card-border); padding: 14px; border-radius: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 13px; }
+    .checkbox-tile { background: #070709; border: 1px solid var(--card-border); padding: 14px; border-radius: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 13px; }
     .checkbox-tile:hover { border-color: var(--gold); }
 
-    /* Actions */
     .btn-group { display: flex; gap: 16px; margin-top: 32px; }
     .btn { flex: 1; padding: 16px; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border-radius: 8px; cursor: pointer; border: none; transition: all 0.2s ease; }
     .btn-primary { background: var(--gold); color: #000; }
     .btn-primary:hover { background: var(--gold-hover); }
     .btn-secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--card-border); }
 
-    @media (max-width: 768px) {
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 36px; width: 100%; max-width: 480px; position: relative; }
+    .modal-close { position: absolute; top: 20px; right: 20px; background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+    .modal-tabs { display: flex; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
+    .modal-tab { flex: 1; padding: 12px; text-align: center; color: var(--text-muted); cursor: pointer; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+    .modal-tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); font-weight: bold; }
+    .auth-view { display: none; }
+    .auth-view.active { display: block; }
+
+    @media (max-width: 900px) {
+      .floating-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 40px; }
+      .top-nav { padding: 16px 20px; }
       .hotel-card { grid-template-columns: 1fr; }
-      .hotel-img-container { height: 160px; }
-      .checkbox-grid { grid-template-columns: 1fr; }
+      .experience-banner { flex-direction: column; gap: 32px; }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="brand-header">
-    <h1>A U R A</h1>
-    <p>Private VIP Suite & Occasion Concierge</p>
+  <!-- AMBIENT BACKGROUND FX -->
+  <div class="ambient-glow"></div>
+
+  <!-- TOP NAVIGATION HEADER -->
+  <nav class="top-nav">
+    <div class="brand-logo">
+      <h1>A U R A</h1>
+    </div>
+    <div class="nav-auth-group">
+      <button type="button" class="nav-btn" onclick="openAuthModal('signin')">Sign In</button>
+      <button type="button" class="nav-btn nav-btn-gold" onclick="openAuthModal('apply')">Become a Member</button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-badge">
+      <span>✦</span> Beyond Ordinary Hospitality
+    </div>
+    <h1 class="hero-title">A U R A</h1>
+    <p class="hero-subtitle">
+      Unlocking direct access to Japan's most sought-after flagship suites and ryokans. Coordinated personally with hotel General Managers for bespoke milestone moments.
+    </p>
+
+    <!-- MAIN TRIGGER BUTTON TO OPEN REQUEST ENGINE -->
+    <button class="cta-trigger-btn" id="openAuraBtn">
+      <span class="star">✦</span> Curate Your VIP Experience
+    </button>
+  </section>
+
+  <!-- CONCEPT & VIBE SECTION -->
+  <section class="concept-section">
+    <div class="section-header">
+      <h2>The AURA Concept</h2>
+      <p>Seamlessly bridging discerning guests with hotel leadership</p>
+    </div>
+
+    <div class="floating-grid">
+      <div class="float-card">
+        <span class="card-num">01 / DIRECT ACCESS</span>
+        <h3>Direct GM Coordination</h3>
+        <p>Bypass automated reservation queues. Every stay brief is delivered directly to General Managers to ensure priority handling, customized room arrangements, and discreet arrivals.</p>
+      </div>
+
+      <div class="float-card">
+        <span class="card-num">02 / BESPOKE OCCASIONS</span>
+        <h3>Tailored Event Curation</h3>
+        <p>From private marriage proposals in Hakone to executive retreats overlooking Mount Fuji, our concierge team orchestrates intricate room setups, vintage champagnes, and private transport.</p>
+      </div>
+
+      <div class="float-card">
+        <span class="card-num">03 / PRIVATE MEMBER LOUNGE</span>
+        <h3>Discreet Luxury</h3>
+        <p>An uninterrupted, serene browsing interface devoid of public rate noise. Tailored for individuals who value anonymity, precision, and extraordinary hospitality.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BANNER -->
+  <div class="experience-banner">
+    <div class="stat-item">
+      <div class="num">100%</div>
+      <div class="label">Direct GM Approvals</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">6</div>
+      <div class="label">Iconic Japan Regions</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">24/7</div>
+      <div class="label">Dedicated VIP Liaison</div>
+    </div>
   </div>
 
-  <!-- STEPPER NAVIGATION -->
-  <div class="step-bar">
-    <div class="step-node active" id="node1"><span class="num">1</span> Membership</div>
-    <div class="step-node" id="node2"><span class="num">2</span> VIP Suites</div>
-    <div class="step-node" id="node3"><span class="num">3</span> Occasion & Add-ons</div>
-    <div class="step-node" id="node4"><span class="num">4</span> Review</div>
+  <!-- MODAL CONTAINER (PREVIOUS REQUEST PAGE EMBEDDED HERE) -->
+  <div class="aura-modal-wrapper" id="auraModalWrapper">
+    <div class="aura-modal-content">
+      <button class="aura-modal-close" onclick="closeAuraExperience()">✕ Close Concierge</button>
+
+      <div class="container">
+        <!-- STEPPER NAVIGATION -->
+        <div class="step-bar">
+          <div class="step-node active" id="node1"><span class="num">1</span> VIP Suites</div>
+          <div class="step-node" id="node2"><span class="num">2</span> Occasion & Add-ons</div>
+          <div class="step-node" id="node3"><span class="num">3</span> Review</div>
+        </div>
+
+        <form id="auraForm">
+          
+          <!-- STEP 1: VIP SUITES CATALOG -->
+          <div class="step-content active" id="step1">
+            <h2>Japan Luxury VIP Suite Collection</h2>
+            <p class="subtitle">Search and select high-end suites directly managed with hotel General Managers.</p>
+
+            <!-- Filter and Search Controls -->
+            <div class="filter-bar">
+              <input type="text" id="searchInput" class="search-input" placeholder="Search by hotel name, city, or suite feature..." oninput="filterHotels()">
+              <select id="regionSelect" class="select-input" onchange="filterHotels()">
+                <option value="all">All Regions (Japan)</option>
+                <option value="tokyo">Tokyo</option>
+                <option value="kyoto">Kyoto</option>
+                <option value="hakone">Hakone / Kanagawa</option>
+                <option value="osaka">Osaka</option>
+                <option value="hokkaido">Hokkaido</option>
+              </select>
+            </div>
+
+            <div class="catalog-controls">
+              <span style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;" id="resultCount">Showing properties...</span>
+            </div>
+
+            <!-- Hotel Grid Container -->
+            <div class="hotel-grid" id="hotelGridContainer"></div>
+
+            <input type="hidden" id="selectedSuite" value="">
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" onclick="validateSuiteSelection()">Configure Occasion →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2: OCCASION & ADD-ONS -->
+          <div class="step-content" id="step2">
+            <h2>Customize Your Stay & Occasion</h2>
+            <p class="subtitle">Tell us about your event so our team can coordinate directly with the hotel GM.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label>Check-in Date (Min 7 Days Out)</label>
+                <input type="date" id="checkinDate" required>
+              </div>
+              <div class="form-group">
+                <label>Duration</label>
+                <select id="nights">
+                  <option value="1">1 Night</option>
+                  <option value="2">2 Nights</option>
+                  <option value="3">3 Nights</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Occasion Focus</label>
+              <select id="occasion">
+                <option value="Marriage Proposal">Marriage Proposal (Custom Setup Required)</option>
+                <option value="Anniversary">Anniversary Celebration</option>
+                <option value="Milestone Birthday">Milestone Birthday</option>
+                <option value="Executive VIP Retreat">Executive VIP Retreat</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>VIP Bespoke Add-Ons</label>
+              <div class="checkbox-grid">
+                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Dom Pérignon Vintage Champagne"> Vintage Dom Pérignon</label>
+                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Bespoke Floral Room Styling"> Floral Room Styling</label>
+                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Artisanal Patisserie Cake"> Artisanal Celebration Cake</label>
+                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Private Chauffeur Airport Transfer"> Airport Chauffeur Service</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Bespoke Instructions & Dietary Preferences for Hotel GM</label>
+              <textarea id="specialNotes" rows="3" placeholder="e.g., Please ensure room setup is completed prior to 18:00 check-in. Guest has severe nut allergy."></textarea>
+            </div>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-secondary" onclick="nextStep(1)">← Back</button>
+              <button type="button" class="btn btn-primary" onclick="renderSummary()">Review Request →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: REVIEW & SUBMIT -->
+          <div class="step-content" id="step3">
+            <h2>Review Request Specifications</h2>
+            <p class="subtitle">Please review your booking brief before submitting to the hotel GM.</p>
+
+            <div style="background: #070709; border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; line-height: 1.8;" id="summaryBox"></div>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-secondary" onclick="nextStep(2)">← Modify Specs</button>
+              <button type="submit" class="btn btn-primary">Send Request</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
   </div>
 
-  <form id="auraForm">
-    
-    <!-- STEP 1: VIP MEMBERSHIP REGISTRATION -->
-    <div class="step-content active" id="step1">
-      <h2>Apply for Private Membership</h2>
-      <p class="subtitle">Access to top luxury suites and bespoke occasion arrangements in Japan is reserved exclusively for registered members.</p>
-      
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+  <!-- AUTHENTICATION MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <button type="button" class="modal-close" onclick="closeAuthModal()">✕</button>
+
+      <div class="modal-tabs">
+        <div class="modal-tab active" id="tabSignin" onclick="switchAuthTab('signin')">Sign In</div>
+        <div class="modal-tab" id="tabApply" onclick="switchAuthTab('apply')">Apply Member</div>
+      </div>
+
+      <div class="auth-view active" id="viewSignin">
+        <div class="form-group">
+          <label>Member Email</label>
+          <input type="email" id="loginEmail" placeholder="vip@domain.com">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••">
+        </div>
+        <button type="button" class="btn btn-primary" style="width: 100%;" onclick="handleLogin()">Access Member Lounge</button>
+      </div>
+
+      <div class="auth-view" id="viewApply">
         <div class="form-group">
           <label>Full Name</label>
-          <input type="text" id="memberName" placeholder="e.g., Lord / Lady / Dr. Name" required>
+          <input type="text" id="memberName" placeholder="e.g., Lord / Lady / Dr. Name">
         </div>
         <div class="form-group">
           <label>Private Email</label>
-          <input type="email" id="memberEmail" placeholder="vip@domain.com" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Membership Tier Preference</label>
-        <select id="memberTier">
-          <option value="Private Access (Complimentary)">Private Access — Individual Celebrations</option>
-          <option value="Executive Ambassador ($500/year)">Executive Ambassador — Priority GM Approvals & Upgrades</option>
-        </select>
-      </div>
-
-      <div class="btn-group">
-        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Explore VIP Suites →</button>
-      </div>
-    </div>
-
-    <!-- STEP 2: VIP SUITES CATALOG -->
-    <div class="step-content" id="step2">
-      <h2>Japan Luxury VIP Suite Collection</h2>
-      <p class="subtitle">Search and select high-end suites directly managed with hotel General Managers.</p>
-
-      <!-- Filter and Search Controls -->
-      <div class="filter-bar">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search by hotel name, city, or suite feature..." oninput="filterHotels()">
-        <select id="regionSelect" class="select-input" onchange="filterHotels()">
-          <option value="all">All Regions (Japan)</option>
-          <option value="tokyo">Tokyo</option>
-          <option value="kyoto">Kyoto</option>
-          <option value="hakone">Hakone / Kanagawa</option>
-          <option value="osaka">Osaka</option>
-          <option value="hokkaido">Hokkaido</option>
-        </select>
-      </div>
-
-      <div class="catalog-controls">
-        <span style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;" id="resultCount">Showing properties...</span>
-        <div>
-          <button type="button" class="currency-btn active" id="btn-jpy" onclick="setCurrency('JPY')">JPY (¥)</button>
-          <button type="button" class="currency-btn" id="btn-usd" onclick="setCurrency('USD')">USD ($)</button>
-        </div>
-      </div>
-
-      <!-- Hotel Grid Container -->
-      <div class="hotel-grid" id="hotelGridContainer">
-        <!-- Dynamically Populated via JS -->
-      </div>
-
-      <!-- Hidden Form State Values -->
-      <input type="hidden" id="selectedSuite" value="">
-      <input type="hidden" id="suitePriceJPY" value="0">
-      <input type="hidden" id="suitePriceUSD" value="0">
-
-      <div class="btn-group">
-        <button type="button" class="btn btn-secondary" onclick="nextStep(1)">← Back</button>
-        <button type="button" class="btn btn-primary" onclick="validateSuiteSelection()">Configure Occasion →</button>
-      </div>
-    </div>
-
-    <!-- STEP 3: OCCASION & ADD-ONS -->
-    <div class="step-content" id="step3">
-      <h2>Customize Your Stay & Occasion</h2>
-      <p class="subtitle">Tell us about your event so our team can coordinate directly with the hotel GM.</p>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-        <div class="form-group">
-          <label>Check-in Date (Min 7 Days Out)</label>
-          <input type="date" id="checkinDate" required>
+          <input type="email" id="memberEmail" placeholder="vip@domain.com">
         </div>
         <div class="form-group">
-          <label>Duration</label>
-          <select id="nights">
-            <option value="1">1 Night</option>
-            <option value="2">2 Nights</option>
-            <option value="3">3 Nights</option>
+          <label>Membership Tier</label>
+          <select id="memberTier">
+            <option value="Private Access">Private Access — Individual Celebrations</option>
+            <option value="Executive Ambassador">Executive Ambassador — Priority GM Approvals & Upgrades</option>
           </select>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label>Occasion Focus</label>
-        <select id="occasion">
-          <option value="Marriage Proposal">Marriage Proposal (Custom Setup Required)</option>
-          <option value="Anniversary">Anniversary Celebration</option>
-          <option value="Milestone Birthday">Milestone Birthday</option>
-          <option value="Executive VIP Retreat">Executive VIP Retreat</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>VIP Bespoke Add-Ons</label>
-        <div class="checkbox-grid">
-          <label class="checkbox-tile"><input type="checkbox" name="addons" value="Dom Pérignon Vintage Champagne"> Vintage Dom Pérignon</label>
-          <label class="checkbox-tile"><input type="checkbox" name="addons" value="Bespoke Floral Room Styling"> Floral Room Styling</label>
-          <label class="checkbox-tile"><input type="checkbox" name="addons" value="Artisanal Patisserie Cake"> Artisanal Celebration Cake</label>
-          <label class="checkbox-tile"><input type="checkbox" name="addons" value="Private Chauffeur Airport Transfer"> Airport Chauffeur Service</label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Bespoke Instructions & Dietary Preferences for Hotel GM</label>
-        <textarea id="specialNotes" rows="3" placeholder="e.g., Please ensure room setup is completed prior to 18:00 check-in. Guest has severe nut allergy."></textarea>
-      </div>
-
-      <div class="btn-group">
-        <button type="button" class="btn btn-secondary" onclick="nextStep(2)">← Back</button>
-        <button type="button" class="btn btn-primary" onclick="renderSummary()">Review Request →</button>
+        <button type="button" class="btn btn-primary" style="width: 100%;" onclick="handleRegister()">Submit Application</button>
       </div>
     </div>
+  </div>
 
-    <!-- STEP 4: REVIEW & SUBMIT -->
-    <div class="step-content" id="step4">
-      <h2>Review Request Specifications</h2>
-      <p class="subtitle">Please review your booking brief before submitting to the hotel GM.</p>
+  <script>
+    // MODAL TOGGLE LOGIC
+    const openBtn = document.getElementById('openAuraBtn');
+    const modalWrapper = document.getElementById('auraModalWrapper');
 
-      <div style="background: #0A0A0C; border: 1px solid var(--card-border); padding: 20px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; line-height: 1.8;" id="summaryBox"></div>
-
-      <div class="btn-group">
-        <button type="button" class="btn btn-secondary" onclick="nextStep(3)">← Modify Specs</button>
-        <button type="submit" class="btn btn-primary">Place Pre-Auth Hold & Send Request</button>
-      </div>
-    </div>
-
-  </form>
-</div>
-
-<script>
-  // Built-in Luxury Hotel Database (Embedded securely in single file)
-  const allHotels = [
-    {
-      id: "hotel-001",
-      name: "Hilton Tokyo",
-      region: "tokyo",
-      district: "Shinjuku, Tokyo",
-      tag: "Modern Luxury",
-      suiteName: "Executive Tower Suite",
-      description: "71 sqm suite featuring floor-to-ceiling panoramic views of the Shinjuku skyline, access to the Executive Lounge on the 37th floor, dual-basin marble bathroom, and dedicated priority concierge.",
-      priceJPY: 75000,
-      priceUSD: 500,
-      image: "https://images.squarespace-cdn.com/content/v1/52ccee75e4b00bc0dba03f46/1530616357555-VBMQ1HKH092BOI3PS3PC/image-asset.jpeg"
-    },
-    {
-      id: "hotel-002",
-      name: "The Ritz-Carlton, Kyoto",
-      region: "kyoto",
-      district: "Kamogawa, Kyoto",
-      tag: "Riverside Sanctuary",
-      suiteName: "Kamogawa Suite",
-      description: "126 sqm luxury suite situated on the banks of the Kamogawa River with expansive floor-to-ceiling windows overlooking Higashiyama mountains, traditional cedar accents, and private dining space.",
-      priceJPY: 160000,
-      priceUSD: 1065,
-      image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "hotel-003",
-      name: "Gora Kadan",
-      region: "hakone",
-      district: "Hakone, Kanagawa",
-      tag: "Imperial Ryokan",
-      suiteName: "Kadan Villa with Open-Air Onsen",
-      description: "A former Imperial family retreat. Features a private outdoor natural hot spring bath surrounded by private Japanese gardens, tatami-matted living quarters, and in-room multi-course Kaiseki dining.",
-      priceJPY: 140000,
-      priceUSD: 930,
-      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "hotel-004",
-      name: "Aman Tokyo",
-      region: "tokyo",
-      district: "Otemachi, Tokyo",
-      tag: "Urban Sanctuary",
-      suiteName: "Aman Suite",
-      description: "157 sqm urban sanctuary offering unbroken views of the Imperial Palace Gardens and Mount Fuji. Equipped with a traditional deep-soaking furo tub, grand piano, and dedicated butler service.",
-      priceJPY: 320000,
-      priceUSD: 2130,
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "hotel-005",
-      name: "Hoshinoya Kyoto",
-      region: "kyoto",
-      district: "Arashiyama, Kyoto",
-      tag: "Riverside Ryokan",
-      suiteName: "Pavilion Suite 'Tsukihashi'",
-      description: "Accessible only by a scenic riverboat transfer down the Oi River. Features hand-carved woodblock wallpaper, elevated tatami seating, and panoramic seasonal riverbank views.",
-      priceJPY: 180000,
-      priceUSD: 1200,
-      image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: "hotel-006",
-      name: "Conrad Osaka",
-      region: "osaka",
-      district: "Nakanoshima, Osaka",
-      tag: "Skyline Icon",
-      suiteName: "Executive Corner Suite",
-      description: "100 sqm corner suite perched high above Nakanoshima with sweeping double-aspect views of Osaka cityscape. Includes executive lounge access and marble soaking tub overlooking the skyline.",
-      priceJPY: 95000,
-      priceUSD: 630,
-      image: "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80"
-    }
-  ];
-
-  let filteredHotels = [...allHotels];
-  let activeCurrency = 'JPY';
-  let selectedHotelId = null;
-
-  // Set 7-Day Minimum Advance Notice Date
-  const dateInput = document.getElementById('checkinDate');
-  const minDate = new Date();
-  minDate.setDate(minDate.getDate() + 7);
-  dateInput.min = minDate.toISOString().split('T')[0];
-
-  function initCatalog() {
-    renderHotelCards();
-  }
-
-  function nextStep(stepNum) {
-    document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.step-node').forEach(el => el.classList.remove('active'));
-    
-    document.getElementById(`step${stepNum}`).classList.add('active');
-    document.getElementById(`node${stepNum}`).classList.add('active');
-  }
-
-  function filterHotels() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const region = document.getElementById('regionSelect').value;
-
-    filteredHotels = allHotels.filter(item => {
-      const matchesSearch = item.name.toLowerCase().includes(query) || 
-                            item.district.toLowerCase().includes(query) || 
-                            item.suiteName.toLowerCase().includes(query);
-      const matchesRegion = (region === 'all') || (item.region === region);
-      return matchesSearch && matchesRegion;
+    openBtn.addEventListener('click', () => {
+      modalWrapper.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
     });
 
-    renderHotelCards();
-  }
+    function closeAuraExperience() {
+      modalWrapper.classList.remove('is-open');
+      document.body.style.overflow = 'auto';
+    }
 
-  function renderHotelCards() {
-    const container = document.getElementById('hotelGridContainer');
-    container.innerHTML = '';
+    // HOTEL CATALOG LOGIC
+    const allHotels = [
+      {
+        id: "hotel-001",
+        name: "Hilton Tokyo",
+        region: "tokyo",
+        district: "Shinjuku, Tokyo",
+        tag: "Modern Luxury",
+        suiteName: "Executive Tower Suite",
+        description: "71 sqm suite featuring floor-to-ceiling panoramic views of the Shinjuku skyline, access to the Executive Lounge on the 37th floor, dual-basin marble bathroom, and dedicated priority concierge.",
+        image: "https://images.squarespace-cdn.com/content/v1/52ccee75e4b00bc0dba03f46/1530616357555-VBMQ1HKH092BOI3PS3PC/image-asset.jpeg"
+      },
+      {
+        id: "hotel-002",
+        name: "The Ritz-Carlton, Kyoto",
+        region: "kyoto",
+        district: "Kamogawa, Kyoto",
+        tag: "Riverside Sanctuary",
+        suiteName: "Kamogawa Suite",
+        description: "126 sqm luxury suite situated on the banks of the Kamogawa River with expansive floor-to-ceiling windows overlooking Higashiyama mountains, traditional cedar accents, and private dining space.",
+        image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "hotel-003",
+        name: "Gora Kadan",
+        region: "hakone",
+        district: "Hakone, Kanagawa",
+        tag: "Imperial Ryokan",
+        suiteName: "Kadan Villa with Open-Air Onsen",
+        description: "A former Imperial family retreat. Features a private outdoor natural hot spring bath surrounded by private Japanese gardens, tatami-matted living quarters, and in-room multi-course Kaiseki dining.",
+        image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "hotel-004",
+        name: "Aman Tokyo",
+        region: "tokyo",
+        district: "Otemachi, Tokyo",
+        tag: "Urban Sanctuary",
+        suiteName: "Aman Suite",
+        description: "157 sqm urban sanctuary offering unbroken views of the Imperial Palace Gardens and Mount Fuji. Equipped with a traditional deep-soaking furo tub, grand piano, and dedicated butler service.",
+        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "hotel-005",
+        name: "Hoshinoya Kyoto",
+        region: "kyoto",
+        district: "Arashiyama, Kyoto",
+        tag: "Riverside Ryokan",
+        suiteName: "Pavilion Suite 'Tsukihashi'",
+        description: "Accessible only by a scenic riverboat transfer down the Oi River. Features hand-carved woodblock wallpaper, elevated tatami seating, and panoramic seasonal riverbank views.",
+        image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "hotel-006",
+        name: "Conrad Osaka",
+        region: "osaka",
+        district: "Nakanoshima, Osaka",
+        tag: "Skyline Icon",
+        suiteName: "Executive Corner Suite",
+        description: "100 sqm corner suite perched high above Nakanoshima with sweeping double-aspect views of Osaka cityscape. Includes executive lounge access and marble soaking tub overlooking the skyline.",
+        image: "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80"
+      }
+    ];
 
-    document.getElementById('resultCount').textContent = `Showing ${filteredHotels.length} Properties`;
+    let filteredHotels = [...allHotels];
+    let selectedHotelId = null;
+    let loggedInUser = null;
 
-    filteredHotels.forEach(item => {
-      const isSelected = selectedHotelId === item.id;
-      const priceVal = activeCurrency === 'JPY' ? `¥${item.priceJPY.toLocaleString()}` : `$${item.priceUSD.toLocaleString()}`;
+    const dateInput = document.getElementById('checkinDate');
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 7);
+    dateInput.min = minDate.toISOString().split('T')[0];
 
-      const cardHTML = `
-        <div class="hotel-card ${isSelected ? 'selected' : ''}" onclick="selectSuite(this, '${item.id}', '${item.name} — ${item.suiteName}', ${item.priceJPY}, ${item.priceUSD})">
-          <div class="hotel-img-container">
-            <img src="${item.image}" alt="${item.name}">
-            <span class="badge-tag">${item.tag}</span>
-          </div>
-          <div class="hotel-details">
-            <div>
-              <span class="district-label">${item.district}</span>
-              <h3>${item.name}</h3>
-              <div class="suite-name">${item.suiteName}</div>
-              <p>${item.description}</p>
+    function initCatalog() { renderHotelCards(); }
+
+    function nextStep(stepNum) {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.step-node').forEach(el => el.classList.remove('active'));
+      document.getElementById(`step${stepNum}`).classList.add('active');
+      document.getElementById(`node${stepNum}`).classList.add('active');
+    }
+
+    function filterHotels() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const region = document.getElementById('regionSelect').value;
+
+      filteredHotels = allHotels.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(query) || 
+                              item.district.toLowerCase().includes(query) || 
+                              item.suiteName.toLowerCase().includes(query);
+        const matchesRegion = (region === 'all') || (item.region === region);
+        return matchesSearch && matchesRegion;
+      });
+
+      renderHotelCards();
+    }
+
+    function renderHotelCards() {
+      const container = document.getElementById('hotelGridContainer');
+      container.innerHTML = '';
+      document.getElementById('resultCount').textContent = `Showing ${filteredHotels.length} Properties`;
+
+      filteredHotels.forEach(item => {
+        const isSelected = selectedHotelId === item.id;
+        const cardHTML = `
+          <div class="hotel-card ${isSelected ? 'selected' : ''}" onclick="selectSuite('${item.id}', '${item.name} — ${item.suiteName}')">
+            <div class="hotel-img-container">
+              <img src="${item.image}" alt="${item.name}">
+              <span class="badge-tag">${item.tag}</span>
             </div>
-            <div class="hotel-footer">
-              <span class="price-display">${priceVal} <span class="per-night">/ night</span></span>
-              <span style="font-size: 11px; color: ${isSelected ? 'var(--gold)' : 'var(--text-muted)'}">
-                ${isSelected ? 'Selected ✓' : 'Select Suite'}
-              </span>
+            <div class="hotel-details">
+              <div>
+                <span class="district-label">${item.district}</span>
+                <h3>${item.name}</h3>
+                <div class="suite-name">${item.suiteName}</div>
+                <p>${item.description}</p>
+              </div>
+              <div class="hotel-footer">
+                <span style="font-size: 11px; color: ${isSelected ? 'var(--gold)' : 'var(--text-muted)'}">
+                  ${isSelected ? 'Selected ✓' : 'Select Suite'}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHTML);
+      });
+    }
+
+    function selectSuite(id, fullSuiteName) {
+      selectedHotelId = id;
+      document.getElementById('selectedSuite').value = fullSuiteName;
+      renderHotelCards();
+    }
+
+    function validateSuiteSelection() {
+      if (!selectedHotelId) {
+        alert("Please select a VIP Suite from the catalog to continue.");
+        return;
+      }
+      nextStep(2);
+    }
+
+    function renderSummary() {
+      const name = loggedInUser ? loggedInUser.name : (document.getElementById('memberName').value || 'Valued VIP Member');
+      const suite = document.getElementById('selectedSuite').value;
+      const nights = parseInt(document.getElementById('nights').value);
+      const date = document.getElementById('checkinDate').value;
+      const occasion = document.getElementById('occasion').value;
+      const addons = Array.from(document.querySelectorAll('input[name="addons"]:checked')).map(el => el.value);
+
+      if(!date) {
+        alert('Please select a valid check-in date (at least 7 days in advance).');
+        return;
+      }
+
+      document.getElementById('summaryBox').innerHTML = `
+        <strong>Member Name:</strong> ${name}<br>
+        <strong>Selected VIP Suite:</strong> ${suite}<br>
+        <strong>Check-in Date:</strong> ${date} (${nights} Night/s)<br>
+        <strong>Occasion Focus:</strong> ${occasion}<br>
+        <strong>Requested Add-Ons:</strong> ${addons.length ? addons.join(', ') : 'None'}
       `;
-      container.insertAdjacentHTML('beforeend', cardHTML);
-    });
-  }
 
-  function selectSuite(cardElement, id, fullSuiteName, priceJPY, priceUSD) {
-    selectedHotelId = id;
-    document.getElementById('selectedSuite').value = fullSuiteName;
-    document.getElementById('suitePriceJPY').value = priceJPY;
-    document.getElementById('suitePriceUSD').value = priceUSD;
-
-    renderHotelCards();
-  }
-
-  function validateSuiteSelection() {
-    if (!selectedHotelId) {
-      alert("Please select a VIP Suite from the catalog to continue.");
-      return;
-    }
-    nextStep(3);
-  }
-
-  function setCurrency(curr) {
-    activeCurrency = curr;
-    document.getElementById('btn-jpy').classList.toggle('active', curr === 'JPY');
-    document.getElementById('btn-usd').classList.toggle('active', curr === 'USD');
-    renderHotelCards();
-  }
-
-  function renderSummary() {
-    const name = document.getElementById('memberName').value || 'Valued Member';
-    const suite = document.getElementById('selectedSuite').value;
-    const priceJPY = parseInt(document.getElementById('suitePriceJPY').value);
-    const priceUSD = parseInt(document.getElementById('suitePriceUSD').value);
-    const nights = parseInt(document.getElementById('nights').value);
-    const date = document.getElementById('checkinDate').value;
-    const occasion = document.getElementById('occasion').value;
-    const addons = Array.from(document.querySelectorAll('input[name="addons"]:checked')).map(el => el.value);
-
-    if(!date) {
-      alert('Please select a valid check-in date (at least 7 days in advance).');
-      return;
+      nextStep(3);
     }
 
-    const totalJPY = (priceJPY * nights).toLocaleString();
-    const totalUSD = (priceUSD * nights).toLocaleString();
-    const formattedTotal = activeCurrency === 'JPY' ? `¥${totalJPY}` : `$${totalUSD}`;
+    /* AUTH MODAL LOGIC */
+    function openAuthModal(view) {
+      document.getElementById('authModal').classList.add('active');
+      switchAuthTab(view);
+    }
 
-    document.getElementById('summaryBox').innerHTML = `
-      <strong>Member Name:</strong> ${name}<br>
-      <strong>Selected VIP Suite:</strong> ${suite}<br>
-      <strong>Check-in Date:</strong> ${date} (${nights} Night/s)<br>
-      <strong>Occasion Focus:</strong> ${occasion}<br>
-      <strong>Requested Add-Ons:</strong> ${addons.length ? addons.join(', ') : 'None'}<br>
-      <hr style="border-color: var(--card-border); margin: 12px 0;">
-      <strong>Estimated Room Pre-Auth Total:</strong> <span style="color: var(--gold); font-weight: bold;">${formattedTotal}</span>
-    `;
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+    }
 
-    nextStep(4);
-  }
+    function switchAuthTab(tab) {
+      document.getElementById('tabSignin').classList.toggle('active', tab === 'signin');
+      document.getElementById('tabApply').classList.toggle('active', tab === 'apply');
+      document.getElementById('viewSignin').classList.toggle('active', tab === 'signin');
+      document.getElementById('viewApply').classList.toggle('active', tab === 'apply');
+    }
 
-  // Initialize on page load
-  window.onload = initCatalog;
-</script>
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      if(!email) { alert("Please enter your member email."); return; }
+      loggedInUser = { name: email.split('@')[0], email: email };
+      updateNavForLoggedInUser();
+      closeAuthModal();
+    }
 
+    function handleRegister() {
+      const name = document.getElementById('memberName').value;
+      const email = document.getElementById('memberEmail').value;
+      if(!name || !email) { alert("Please fill in your details."); return; }
+      loggedInUser = { name: name, email: email };
+      updateNavForLoggedInUser();
+      closeAuthModal();
+    }
+
+    function updateNavForLoggedInUser() {
+      const navGroup = document.querySelector('.nav-auth-group');
+      navGroup.innerHTML = `
+        <span style="font-size: 13px; color: var(--gold);">Welcome, ${loggedInUser.name}</span>
+        <button type="button" class="nav-btn" onclick="logout()">Sign Out</button>
+      `;
+    }
+
+    function logout() {
+      loggedInUser = null;
+      location.reload();
+    }
+
+    window.onload = initCatalog;
+  </script>
 </body>
 </html>
