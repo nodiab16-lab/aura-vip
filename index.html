@@ -461,6 +461,7 @@
       .top-nav { padding: 16px 20px; }
       .hotel-card { grid-template-columns: 1fr; }
       .experience-banner { flex-direction: column; gap: 32px; }
+      .checkbox-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -540,7 +541,7 @@
     </div>
   </div>
 
-  <!-- MODAL CONTAINER (PREVIOUS REQUEST PAGE EMBEDDED HERE) -->
+  <!-- MODAL CONTAINER -->
   <div class="aura-modal-wrapper" id="auraModalWrapper">
     <div class="aura-modal-content">
       <button class="aura-modal-close" onclick="closeAuraExperience()">✕ Close Concierge</button>
@@ -553,14 +554,16 @@
           <div class="step-node" id="node3"><span class="num">3</span> Review</div>
         </div>
 
-        <form id="auraForm">
-          
+        <!-- FORM CONNECTED TO WEB3FORMS -->
+        <form action="https://api.web3forms.com/submit" method="POST" id="auraForm">
+          <input type="hidden" name="access_key" value="b2e4a928-e6eb-4053-b250-284b2f84a582">
+          <input type="hidden" name="subject" value="New AURA VIP Suite Request">
+
           <!-- STEP 1: VIP SUITES CATALOG -->
           <div class="step-content active" id="step1">
             <h2>Japan Luxury VIP Suite Collection</h2>
             <p class="subtitle">Search and select high-end suites directly managed with hotel General Managers.</p>
 
-            <!-- Filter and Search Controls -->
             <div class="filter-bar">
               <input type="text" id="searchInput" class="search-input" placeholder="Search by hotel name, city, or suite feature..." oninput="filterHotels()">
               <select id="regionSelect" class="select-input" onchange="filterHotels()">
@@ -577,10 +580,9 @@
               <span style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;" id="resultCount">Showing properties...</span>
             </div>
 
-            <!-- Hotel Grid Container -->
             <div class="hotel-grid" id="hotelGridContainer"></div>
 
-            <input type="hidden" id="selectedSuite" value="">
+            <input type="hidden" id="selectedSuiteInput" name="Selected Suite" value="">
 
             <div class="btn-group">
               <button type="button" class="btn btn-primary" onclick="validateSuiteSelection()">Configure Occasion →</button>
@@ -594,22 +596,34 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
               <div class="form-group">
+                <label>Guest Name</label>
+                <input type="text" id="guestName" name="Guest Name" placeholder="Full Name" required>
+              </div>
+              <div class="form-group">
+                <label>Guest Email</label>
+                <input type="email" id="guestEmail" name="Guest Email" placeholder="vip@domain.com" required>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
                 <label>Check-in Date (Min 7 Days Out)</label>
-                <input type="date" id="checkinDate" required>
+                <input type="date" id="checkinDate" name="Check-in Date" required>
               </div>
               <div class="form-group">
                 <label>Duration</label>
-                <select id="nights">
-                  <option value="1">1 Night</option>
-                  <option value="2">2 Nights</option>
-                  <option value="3">3 Nights</option>
+                <select id="nights" name="Stay Duration">
+                  <option value="1 Night">1 Night</option>
+                  <option value="2 Nights">2 Nights</option>
+                  <option value="3 Nights">3 Nights</option>
+                  <option value="4+ Nights">4+ Nights</option>
                 </select>
               </div>
             </div>
 
             <div class="form-group">
               <label>Occasion Focus</label>
-              <select id="occasion">
+              <select id="occasion" name="Occasion">
                 <option value="Marriage Proposal">Marriage Proposal (Custom Setup Required)</option>
                 <option value="Anniversary">Anniversary Celebration</option>
                 <option value="Milestone Birthday">Milestone Birthday</option>
@@ -620,16 +634,16 @@
             <div class="form-group">
               <label>VIP Bespoke Add-Ons</label>
               <div class="checkbox-grid">
-                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Dom Pérignon Vintage Champagne"> Vintage Dom Pérignon</label>
-                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Bespoke Floral Room Styling"> Floral Room Styling</label>
-                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Artisanal Patisserie Cake"> Artisanal Celebration Cake</label>
-                <label class="checkbox-tile"><input type="checkbox" name="addons" value="Private Chauffeur Airport Transfer"> Airport Chauffeur Service</label>
+                <label class="checkbox-tile"><input type="checkbox" name="Addons" value="Dom Pérignon Vintage Champagne"> Vintage Dom Pérignon</label>
+                <label class="checkbox-tile"><input type="checkbox" name="Addons" value="Bespoke Floral Room Styling"> Floral Room Styling</label>
+                <label class="checkbox-tile"><input type="checkbox" name="Addons" value="Artisanal Patisserie Cake"> Artisanal Celebration Cake</label>
+                <label class="checkbox-tile"><input type="checkbox" name="Addons" value="Private Chauffeur Airport Transfer"> Airport Chauffeur Service</label>
               </div>
             </div>
 
             <div class="form-group">
               <label>Bespoke Instructions & Dietary Preferences for Hotel GM</label>
-              <textarea id="specialNotes" rows="3" placeholder="e.g., Please ensure room setup is completed prior to 18:00 check-in. Guest has severe nut allergy."></textarea>
+              <textarea id="specialNotes" name="GM Special Instructions" rows="3" placeholder="e.g., Please ensure room setup is completed prior to 18:00 check-in. Guest has severe nut allergy."></textarea>
             </div>
 
             <div class="btn-group">
@@ -780,14 +794,14 @@
 
     let filteredHotels = [...allHotels];
     let selectedHotelId = null;
-    let loggedInUser = null;
+    let selectedHotelName = "";
 
     const dateInput = document.getElementById('checkinDate');
-    const minDate = new Date();
-    minDate.setDate(minDate.getDate() + 7);
-    dateInput.min = minDate.toISOString().split('T')[0];
-
-    function initCatalog() { renderHotelCards(); }
+    if (dateInput) {
+      const minDate = new Date();
+      minDate.setDate(minDate.getDate() + 7);
+      dateInput.min = minDate.toISOString().split('T')[0];
+    }
 
     function nextStep(stepNum) {
       document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
@@ -832,8 +846,8 @@
                 <p>${item.description}</p>
               </div>
               <div class="hotel-footer">
-                <span style="font-size: 11px; color: ${isSelected ? 'var(--gold)' : 'var(--text-muted)'}">
-                  ${isSelected ? 'Selected ✓' : 'Select Suite'}
+                <span style="font-size: 12px; color: var(--gold); font-weight: 600;">
+                  ${isSelected ? '✓ SELECTED' : 'SELECT SUITE →'}
                 </span>
               </div>
             </div>
@@ -843,92 +857,90 @@
       });
     }
 
-    function selectSuite(id, fullSuiteName) {
+    function selectSuite(id, name) {
       selectedHotelId = id;
-      document.getElementById('selectedSuite').value = fullSuiteName;
+      selectedHotelName = name;
+      document.getElementById('selectedSuiteInput').value = name;
       renderHotelCards();
     }
 
     function validateSuiteSelection() {
       if (!selectedHotelId) {
-        alert("Please select a VIP Suite from the catalog to continue.");
+        alert('Please select a VIP suite from the catalog to proceed.');
         return;
       }
       nextStep(2);
     }
 
     function renderSummary() {
-      const name = loggedInUser ? loggedInUser.name : (document.getElementById('memberName').value || 'Valued VIP Member');
-      const suite = document.getElementById('selectedSuite').value;
-      const nights = parseInt(document.getElementById('nights').value);
-      const date = document.getElementById('checkinDate').value;
-      const occasion = document.getElementById('occasion').value;
-      const addons = Array.from(document.querySelectorAll('input[name="addons"]:checked')).map(el => el.value);
+      const name = document.getElementById('guestName').value;
+      const email = document.getElementById('guestEmail').value;
+      const checkin = document.getElementById('checkinDate').value;
 
-      if(!date) {
-        alert('Please select a valid check-in date (at least 7 days in advance).');
+      if (!name || !email || !checkin) {
+        alert('Please fill out your name, email, and check-in date.');
         return;
       }
 
-      document.getElementById('summaryBox').innerHTML = `
-        <strong>Member Name:</strong> ${name}<br>
-        <strong>Selected VIP Suite:</strong> ${suite}<br>
-        <strong>Check-in Date:</strong> ${date} (${nights} Night/s)<br>
-        <strong>Occasion Focus:</strong> ${occasion}<br>
-        <strong>Requested Add-Ons:</strong> ${addons.length ? addons.join(', ') : 'None'}
+      const nights = document.getElementById('nights').value;
+      const occasion = document.getElementById('occasion').value;
+      const notes = document.getElementById('specialNotes').value || 'None provided';
+
+      const selectedAddons = [];
+      document.querySelectorAll('input[name="Addons"]:checked').forEach(cb => {
+        selectedAddons.push(cb.value);
+      });
+
+      const summaryHTML = `
+        <p><strong>Guest:</strong> ${name} (${email})</p>
+        <p><strong>Selected Suite:</strong> ${selectedHotelName}</p>
+        <p><strong>Check-in Date:</strong> ${checkin} (${nights})</p>
+        <p><strong>Occasion:</strong> ${occasion}</p>
+        <p><strong>VIP Add-Ons:</strong> ${selectedAddons.length > 0 ? selectedAddons.join(', ') : 'None'}</p>
+        <p><strong>Instructions for GM:</strong> ${notes}</p>
       `;
 
+      document.getElementById('summaryBox').innerHTML = summaryHTML;
       nextStep(3);
     }
 
-    /* AUTH MODAL LOGIC */
-    function openAuthModal(view) {
-      document.getElementById('authModal').classList.add('active');
-      switchAuthTab(view);
+    // AUTH MODAL LOGIC
+    const authModal = document.getElementById('authModal');
+
+    function openAuthModal(mode) {
+      authModal.classList.add('active');
+      switchAuthTab(mode);
     }
 
     function closeAuthModal() {
-      document.getElementById('authModal').classList.remove('active');
+      authModal.classList.remove('active');
     }
 
     function switchAuthTab(tab) {
-      document.getElementById('tabSignin').classList.toggle('active', tab === 'signin');
-      document.getElementById('tabApply').classList.toggle('active', tab === 'apply');
-      document.getElementById('viewSignin').classList.toggle('active', tab === 'signin');
-      document.getElementById('viewApply').classList.toggle('active', tab === 'apply');
+      document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
+
+      if (tab === 'signin') {
+        document.getElementById('tabSignin').classList.add('active');
+        document.getElementById('viewSignin').classList.add('active');
+      } else {
+        document.getElementById('tabApply').classList.add('active');
+        document.getElementById('viewApply').classList.add('active');
+      }
     }
 
     function handleLogin() {
-      const email = document.getElementById('loginEmail').value;
-      if(!email) { alert("Please enter your member email."); return; }
-      loggedInUser = { name: email.split('@')[0], email: email };
-      updateNavForLoggedInUser();
+      alert('Member access granted.');
       closeAuthModal();
     }
 
     function handleRegister() {
-      const name = document.getElementById('memberName').value;
-      const email = document.getElementById('memberEmail').value;
-      if(!name || !email) { alert("Please fill in your details."); return; }
-      loggedInUser = { name: name, email: email };
-      updateNavForLoggedInUser();
+      alert('Membership application submitted for review.');
       closeAuthModal();
     }
 
-    function updateNavForLoggedInUser() {
-      const navGroup = document.querySelector('.nav-auth-group');
-      navGroup.innerHTML = `
-        <span style="font-size: 13px; color: var(--gold);">Welcome, ${loggedInUser.name}</span>
-        <button type="button" class="nav-btn" onclick="logout()">Sign Out</button>
-      `;
-    }
-
-    function logout() {
-      loggedInUser = null;
-      location.reload();
-    }
-
-    window.onload = initCatalog;
+    // Initialize Catalog on Page Load
+    renderHotelCards();
   </script>
 </body>
 </html>
